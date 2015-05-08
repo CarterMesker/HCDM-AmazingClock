@@ -10,81 +10,136 @@
 void setup()                    // run once, when the sketch starts
 {
   MeggyJrSimpleSetup();      // Required code, line 2 of 2.
-
+  Serial.begin(9600);
 }
 
 void loop() {
   
+  CheckButtonsPress();
+  if(Button_A) {
+    minutes++;
+    Tone_Start(18182, 50);
+  }
+  
+  if(Button_B) {
+    hours++;
+    Tone_Start(ToneB3, 50);
+  }
+  
   time = millis(); // time takes the current value of millis
 
-  if(time - previous > 1000) { // if the differcence between the current measuerement of millis and the prevevious measurement of millis is greater than 1000 then advance seconds and previous will take the current value of time
-   if(seconds > 59) {
+  if(time - previous > 1000) { // if the difference between the current measuerement of millis and the prevevious measurement of millis is greater than 1000 then advance seconds and previous will take the current value of time
+    if (seconds < 59)
+    {
+      seconds++;
+    }
+    else 
+    {
      seconds = 0;
-     minutes ++; 
-   }
-   else seconds ++;
+     minutes++;
+    }
+    if (minutes > 59) 
+    {
+      minutes = 0;
+      hours++;
+    }
+   previous = time; 
   }
-    
-  drawMinutes;
+  Serial.print("Seconds = ");
+  Serial.println(seconds);
+  Serial.print("Minutes = ");
+  Serial.println(minutes);
+  if(hours <= 12) {
+    drawMinutes(1);
+  }
+  if(hours > 12) {
+    drawMinutes(5);
+  }
+  if(hours <= 12) {
+    drawHours(1);
+  }
+  if(hours > 12) {
+    drawHours(5);
+  }
   DisplaySlate();
+  ClearSlate();
 
 }
 
-void drawMinutes() {
+void drawMinutes(int color) 
+{
   int ones = minutes%10;
-  switch (ones) {
+  int tens = minutes/10;
+  switch (ones) 
+  {
     case 1:
-      DrawOne(4,1);
+      DrawOne(4,color);
       break;
     case 2:
-      DrawTwo(4,1);
+      DrawTwo(4,color);
       break; 
     case 3:
-      DrawThree(4,1);
+      DrawThree(4,color);
       break; 
     case 4:
-      DrawFour(4,1);
+      DrawFour(4,color);
       break; 
     case 5:
-      DrawFive(4,1);
+      DrawFive(4,color);
       break; 
     case 6:
-      DrawSix(4,1);
+      DrawSix(4,color);
       break; 
     case 7:
-      DrawSeven(4,1);
+      DrawSeven(4,color);
       break; 
     case 8:
-      DrawEight(4,1);
+      DrawEight(4,color);
       break; 
     case 9:
-      DrawNine(4,1);
+      DrawNine(4,color);
       break; 
+    case 0:
+      DrawZero(4,color);
+      break;
+  }
+  switch (tens) 
+  {
+    case 1:
+      DrawOne(0,color);
+      break;
+    case 2:
+      DrawTwo(0,color);
+      break; 
+    case 3:
+      DrawThree(0,color);
+      break; 
+    case 4:
+      DrawFour(0,color);
+      break; 
+    case 5:
+      DrawFive(0,color);
+      break; 
+    case 0:
+      DrawZero(0,color);
+      break;
   }
 }
 
-void drawHours() {
-  int tens = minutes/10;
-  switch (tens) {
-    case 1:
-      DrawOne(0,1);
-      break;
-    case 2:
-      DrawTwo(0,1);
-      break; 
-    case 3:
-      DrawThree(0,1);
-      break; 
-    case 4:
-      DrawFour(0,1);
-      break; 
-    case 5:
-      DrawFive(0,1);
-      break; 
-    case 6:
-      DrawSix(0,1);
-      break; 
-  }
+
+void DrawZero(int offset, int color) {
+  DrawPx(0+offset,4,color);
+  DrawPx(1+offset,4,color);
+  DrawPx(2+offset,4,color);
+  DrawPx(0+offset,3,color);
+  DrawPx(2+offset,3,color);
+  DrawPx(0+offset,2,color);
+  DrawPx(2+offset,2,color);
+  DrawPx(2+offset,1,color);
+  DrawPx(0+offset,1,color);
+  DrawPx(0+offset,0,color);
+  DrawPx(1+offset,0,color);
+  DrawPx(2+offset,0,color);
 }
 
 void DrawOne(int offset, int color) {
@@ -208,4 +263,9 @@ void DrawNine(int offset, int color) {
   DrawPx(2+offset,0,color);
 }
 
+void DrawHours(int i, int color) {
+  for(int i=1; i <= hours; i++) {
+    DrawPx(i,6,color)
+  }
+}
 
