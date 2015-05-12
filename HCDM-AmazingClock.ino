@@ -5,6 +5,8 @@
   int hours = 0;
   unsigned long time;
   unsigned long previous;
+  boolean am = true;
+  
 
 
 void setup()                    // run once, when the sketch starts
@@ -43,6 +45,11 @@ void loop() {
       minutes = 0;
       hours++;
     }
+    if (hours > 12)
+    {
+      am =! am;
+      hours = 1;
+    }
    previous = time; 
   }
   Serial.print("Seconds = ");
@@ -50,16 +57,14 @@ void loop() {
   Serial.print("Minutes = ");
   Serial.println(minutes);
   if(hours <= 12) {
-    drawMinutes(1);
-  }
-  if(hours > 12) {
-    drawMinutes(5);
-  }
-  if(hours <= 12) {
-    drawHours(1);
-  }
-  if(hours > 12) {
-    drawHours(5);
+    if(am) {
+      drawHours(2);
+      drawMinutes(1);
+    }
+    else {
+      drawHours(6);
+      drawMinutes(5);
+    }
   }
   DisplaySlate();
   ClearSlate();
@@ -263,9 +268,54 @@ void DrawNine(int offset, int color) {
   DrawPx(2+offset,0,color);
 }
 
-void DrawHours(int i, int color) {
-  for(int i=1; i <= hours; i++) {
-    DrawPx(i,6,color)
+void drawHours(int color) {
+  if(hours < 7) {
+    for(int i=1; i <= hours; i++) {
+      DrawPx(i,7,color);
+    }
   }
+  else {
+    for(int i=1; i < 7; i++) {
+      DrawPx(i,7,color);
+    }
+    for(int i=1; i <= hours-6; i++) {
+      DrawPx(i,6,color);
+    }
+  }
+}
+
+void hourMusic() {
+  Tone_Start(ToneF3, 750);
+  delay(750);
+  Tone_Start(ToneA3, 750);
+  delay(750);
+  Tone_Start(ToneG3, 750);
+  delay(750);
+  Tone_Start(ToneC3, 750);
+  delay(1000);
+  Tone_Start(ToneF3, 750);
+  delay(750);
+  Tone_Start(ToneG3, 750);
+  delay(750);
+  Tone_Start(ToneA3, 750);
+  delay(750);
+  Tone_Start(ToneF3, 750);
+  delay(1000);
+  Tone_Start(ToneA3, 750);
+  delay(750);
+  Tone_Start(ToneF3, 750);
+  delay(750);
+  Tone_Start(ToneG3, 750);
+  delay(750);
+  Tone_Start(ToneC3, 750);
+  delay(1000);
+  Tone_Start(ToneC3, 750);
+  delay(750);
+  Tone_Start(ToneG3, 750);
+  delay(750);
+  Tone_Start(ToneA3, 750);
+  delay(750);
+  Tone_Start(ToneF3, 750);
+  delay(4500);
 }
 
