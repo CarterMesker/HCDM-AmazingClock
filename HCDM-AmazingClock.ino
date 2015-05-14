@@ -6,6 +6,8 @@
   unsigned long time;
   unsigned long previous;
   boolean am = true;
+  boolean secondsLeft = false;
+  
   
 
 
@@ -34,6 +36,7 @@ void loop() {
     if (seconds < 59)
     {
       seconds++;
+      secondsLeft=!secondsLeft;
     }
     else 
     {
@@ -66,7 +69,13 @@ void loop() {
       drawMinutes(5);
     }
   }
+  if(secondsLeft)
+    DrawSeconds(0,4);
+  else
+    DrawSeconds(7,4);
   DisplaySlate();
+  if(hours == 1 && minutes == 0 && seconds == 0)
+    hourMusic();
   ClearSlate();
 
 }
@@ -316,6 +325,10 @@ void hourMusic() {
   Tone_Start(ToneA3, 750);
   delay(750);
   Tone_Start(ToneF3, 750);
-  delay(4500);
+}
+
+void DrawSeconds(int offset, int color) {
+  DrawPx(0+offset,6,color);
+  DrawPx(0+offset,7,color);
 }
 
